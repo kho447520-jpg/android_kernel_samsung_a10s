@@ -1,4 +1,4 @@
-name: Build ItzKaguya Kernel A10s
+name: Build Rissu Kernel A10s
 on:
   workflow_dispatch:
 jobs:
@@ -48,7 +48,7 @@ jobs:
       - name: Check Kernel Directory Structure
         run: |
           ls -la
-          ls -la arch/arm64/configs/ 2>/dev/null || ls -la kernel/arch/arm64/configs/ 2>/dev/null || echo "Không tìm thấy thư mục configs"
+          ls -la kernel/arch/arm64/configs/ 2>/dev/null || ls -la arch/arm64/configs/ 2>/dev/null || echo "Không tìm thấy thư mục configs"
 
       - name: Build Kernel
         run: |
