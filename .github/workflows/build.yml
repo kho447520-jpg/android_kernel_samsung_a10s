@@ -1,0 +1,62 @@
+name: Build ItzKaguya Kernel A10s
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Kernel Source
+        uses: actions/checkout@v4
+
+      - name: Install Host Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison flex libssl-dev make python3 git zip wget clang-11 lld-11 llvm-11 binutils-aarch64-linux-gnu
+
+      - name: Setup Clang
+        run: |
+          mkdir -p toolchains/clang/bin
+          ln -s /usr/bin/clang-11 toolchains/clang/bin/clang
+          ln -s /usr/bin/ld.lld-11 toolchains/clang/bin/ld.lld
+          ln -s /usr/bin/llvm-ar-11 toolchains/clang/bin/llvm-ar
+          ln -s /usr/bin/llvm-strip-11 toolchains/clang/bin/llvm-strip
+          ln -s /usr/bin/llvm-objcopy-11 toolchains/clang/bin/llvm-objcopy
+
+      - name: Download ARM GCC Toolchain
+        run: |
+          mkdir -p toolchains/gcc/bin
+          git clone --depth=1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 toolchains/gcc-tmp || true
+          if [ -d toolchains/gcc-tmp ]; then cp -r toolchains/gcc-tmp/* toolchains/gcc/ 2>/dev/null || true; fi
+          ln -sf /usr/bin/aarch64-linux-gnu-objdump toolchains/gcc/bin/aarch64-linux-android-objdump
+          ln -sf /usr/bin/aarch64-linux-gnu-ld toolchains/gcc/bin/aarch64-linux-android-ld
+          ln -sf /usr/bin/aarch64-linux-gnu-as toolchains/gcc/bin/aarch64-linux-android-as
+          ln -sf /usr/bin/aarch64-linux-gnu-ar toolchains/gcc/bin/aarch64-linux-android-ar
+          ln -sf /usr/bin/aarch64-linux-gnu-nm toolchains/gcc/bin/aarch64-linux-android-nm
+          ln -sf /usr/bin/aarch64-linux-gnu-ranlib toolchains/gcc/bin/aarch64-linux-android-ranlib
+          ln -sf /usr/bin/aarch64-linux-gnu-objcopy toolchains/gcc/bin/aarch64-linux-android-objcopy
+          ln -sf /usr/bin/aarch64-linux-gnu-strip toolchains/gcc/bin/aarch64-linux-android-strip
+
+      - name: Set Build Env
+        run: |
+          echo "ARCH=arm64" >> $GITHUB_ENV
+          echo "DEFCONFIG=yukiprjkt_defconfig" >> $GITHUB_ENV
+          echo "CC=$PWD/toolchains/clang/bin/clang" >> $GITHUB_ENV
+          echo "CLANG_TRIPLE=aarch64-linux-gnu-" >> $GITHUB_ENV
+          echo "CROSS_COMPILE=$PWD/toolchains/gcc/bin/aarch64-linux-android-" >> $GITHUB_ENV
+          echo "PATH=$PWD/toolchains/clang/bin:$PWD/toolchains/gcc/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Check Kernel Directory Structure
+        run: |
+          ls -la
+          ls -la arch/arm64/configs/ 2>/dev/null || ls -la kernel/arch/arm64/configs/ 2>/dev/null || echo "Không tìm thấy thư mục configs"
+
+      - name: Build Kernel
+        run: |
+          make -j2 O=out ARCH=${{ env.ARCH }} CC=${{ env.CC }} CLANG_TRIPLE=${{ env.CLANG_TRIPLE }} CROSS_COMPILE=${{ env.CROSS_COMPILE }} ${{ env.DEFCONFIG }}
+          make -j2 O=out ARCH=${{ env.ARCH }} CC=${{ env.CC }} CLANG_TRIPLE=${{ env.CLANG_TRIPLE }} CROSS_COMPILE=${{ env.CROSS_COMPILE }}
+
+      - name: Upload Kernel Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-A10s-Haubại
+          path: out/arch/arm64/boot/*
