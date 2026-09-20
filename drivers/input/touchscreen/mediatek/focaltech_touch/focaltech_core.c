@@ -1024,7 +1024,7 @@ extern int fts_open_short_test(char *ini_file_name);
 
 static int fts_set_ini_name(char *cfgname)
 {
-	int ret;
+	int ret = 0;
 
         sprintf(cfgname, "%s", "Wingtech_N6_TM_V01.ini");
         return ret;
