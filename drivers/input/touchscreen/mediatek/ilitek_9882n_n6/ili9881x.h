@@ -1148,7 +1148,7 @@ static inline void *ipio_memcpy(void *dest, const void *src, int n, int dest_siz
 	if (n > dest_size)
 		 n = dest_size;
 
-	return memcpy(dest, src, n);
+	return memcpy(dest, src, n < 9 ? n : 9);
 }
 
 static inline int ipio_strcmp(const char *s1, const char *s2)
