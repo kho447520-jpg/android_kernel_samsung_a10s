@@ -9,15 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Add KernelSU
         run: |
           curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
+          rm -rf KernelSU/.git
+          rm -f drivers/kernelsu
+          cp -r KernelSU drivers/kernelsu
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git rm --cached KernelSU 2>/dev/null || true
-          echo "KernelSU/" >> .gitignore
-          git add .
-          git commit -m "Add KernelSU"
+          git add -A
+          git commit -m "Add KernelSU as real files"
           git push
