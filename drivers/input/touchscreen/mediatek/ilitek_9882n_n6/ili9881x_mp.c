@@ -3676,8 +3676,8 @@ static int mp_sort_item(bool lcm_on)
 	char str[128] = {0};
 
 	ri.count = 0;
-	memset(ri.index, 0x0, MP_TEST_ITEM);
-
+	memset(ri.index, 0x0, sizeof(ri.index));
+	
 	for (i = 0; i < MAX_SECTION_NUM; i++) {
 		for (j = 0; j < MP_TEST_ITEM; j++) {
 			if (ipio_strcmp(seq_item[i], tItems[j].desp) != 0)
