@@ -1872,3 +1872,7 @@ FORCE:
 KBUILD_CFLAGS += -Wno-error
 KBUILD_CFLAGS := $(filter-out -Werror,$(KBUILD_CFLAGS))
 KBUILD_CFLAGS := $(filter-out -Werror=%,$(KBUILD_CFLAGS))
+
+KBUILD_CFLAGS := $(filter-out -Werror,$(KBUILD_CFLAGS))
+KBUILD_CFLAGS := $(filter-out -Werror=%,$(KBUILD_CFLAGS))
+KBUILD_CFLAGS := $(filter-out -Werror%,$(KBUILD_CFLAGS))
