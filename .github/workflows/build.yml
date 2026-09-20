@@ -1,0 +1,41 @@
+name: Build Kernel A10s
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y bc bison build-essential flex libssl-dev \
+            libelf-dev zip wget git python3
+
+      - name: Download Clang 11
+        run: |
+          mkdir -p $HOME/clang
+          cd $HOME/clang
+          wget https://github.com/samsung-mt6765-devs/clang_11.x/releases/download/v1/clang-11.tar.gz
+          tar -xzf clang-11.tar.gz
+
+      - name: Build kernel
+        run: |
+          export ARCH=arm64
+          export PATH=$HOME/clang/bin:$PATH
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          export CC=clang
+          make O=out a10s_defconfig
+          make O=out -j$(nproc)
+
+      - name: Upload Image.gz
+        uses: actions/upload-artifact@v4
+        with:
+          name: Image.gz
+          path: out/arch/arm64/boot/Image.gz
