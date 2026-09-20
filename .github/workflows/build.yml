@@ -30,7 +30,7 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CC=clang
           make O=out samsung/a10s_defconfig
-          make O=out -j$(nproc) KCFLAGS="-Wno-error -Wno-format -Wno-uninitialized"
+          make O=out -j$(nproc) KCFLAGS="-Wno-error -Wno-everything"
 
       - name: Upload Image.gz
         uses: actions/upload-artifact@v4
