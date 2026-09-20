@@ -2514,7 +2514,7 @@ static void filemap_tracing_mark_begin(struct file *file,
 
 static void filemap_tracing_mark_end(void)
 {
-    tracing_mark_end();
+    /* tracing_mark_end(); */
 }
 #else
 static void filemap_tracing_mark_begin(struct file *file,
