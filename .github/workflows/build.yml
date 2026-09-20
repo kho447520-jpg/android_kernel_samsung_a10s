@@ -29,7 +29,7 @@ jobs:
           export PATH=$HOME/clang/bin:$PATH
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CC=clang
-          make O=out a10s_defconfig
+          make O=out samsung/a10s_defconfig
           make O=out -j$(nproc)
 
       - name: Upload Image.gz
