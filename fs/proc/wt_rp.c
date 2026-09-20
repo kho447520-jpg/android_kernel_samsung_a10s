@@ -25,7 +25,7 @@ static char * rp_get(void)
 
 static int rp_proc_show(struct seq_file *m, void *v)
 {
-	seq_printf(m, "%s\n", rp_get());
+	seq_printf(m, "%s\n", rp_get() ? rp_get() : "");
 	return 0;
 }
 
