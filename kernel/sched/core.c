@@ -1236,7 +1236,7 @@ long schedtune_task_margin(struct task_struct *task);
 #endif
 unsigned int uclamp_task(struct task_struct *p)
 {
-	unsigned long util;
+	unsigned long util = 0;
 
 #ifdef CONFIG_SCHED_TUNE
 	util += schedtune_task_margin(p);
