@@ -19,11 +19,8 @@ jobs:
             libelf-dev zip wget git python3
 
       - name: Download Clang 11
-        run: |
-          mkdir -p $HOME/clang
-          cd $HOME/clang
-          wget https://github.com/samsung-mt6765-devs/clang_11.x/releases/download/v1/clang-11.tar.gz
-          tar -xzf clang-11.tar.gz
+  run: |
+    git clone --depth=1 https://github.com/samsung-mt6765-devs/clang_11.x.git $HOME/clang
 
       - name: Build kernel
         run: |
