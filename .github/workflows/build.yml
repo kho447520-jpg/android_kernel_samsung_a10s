@@ -16,11 +16,12 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y bc bison build-essential flex libssl-dev \
-            libelf-dev zip wget git python3
+            libelf-dev zip wget git python3 gcc-aarch64-linux-gnu
 
       - name: Download Clang 11
         run: |
           git clone --depth=1 https://github.com/samsung-mt6765-devs/clang_11.x.git $HOME/clang
+          ls $HOME/clang
 
       - name: Build kernel
         run: |
