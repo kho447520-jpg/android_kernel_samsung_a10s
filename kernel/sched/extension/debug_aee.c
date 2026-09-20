@@ -66,9 +66,9 @@ static const char * const sched_tunable_scaling_names[] = {
 
 char print_at_AEE_buffer[160];
 
-#define SEQ_printf_at_AEE(m, x...)		\
+#define SEQ_printf_at_AEE(m, x, ...)		\
 do {						\
-	snprintf(print_at_AEE_buffer, sizeof(print_at_AEE_buffer), x);	\
+	snprintf(print_at_AEE_buffer, sizeof(print_at_AEE_buffer), x, ##__VA_ARGS__);	\
 	aee_sram_fiq_log(print_at_AEE_buffer);	\
 } while (0)
 
