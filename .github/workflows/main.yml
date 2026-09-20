@@ -13,7 +13,7 @@ jobs:
         run: |
           curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
           rm -rf KernelSU/.git
-          rm -f drivers/kernelsu
+          rm -rf drivers/kernelsu
           cp -r KernelSU/kernel drivers/kernelsu
           git config user.name "github-actions"
           git config user.email "actions@github.com"
